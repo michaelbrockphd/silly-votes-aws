@@ -17,7 +17,7 @@ function App() {
                 <AppHeader />
 
                 <div className={appStyles.pageContent}>
-                    <Router basename={process.env.PUBLIC_URL}>
+                    <Router>
                         <Switch>
                             <Route exact path="/">
                                 <Redirect to="/campaigns" />

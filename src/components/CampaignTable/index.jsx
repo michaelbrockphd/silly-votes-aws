@@ -40,8 +40,8 @@ const CampaignTable = (props) => {
 
                 <TableBody>
                     {campaigns.map(c => (
-                        <TableRow key={c._id}>
-                            <TableCell component="th" scope="row">{c.title}</TableCell>
+                        <TableRow key={c.id}>
+                            <TableCell component="th" scope="row">{c.description}</TableCell>
                             <TableCell align="center">{c.poolSize}</TableCell>
                             <TableCell align="center">{c.choices[0]}</TableCell>
                             <TableCell align="center">{c.choices[1]}</TableCell>
