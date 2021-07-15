@@ -1,0 +1,15 @@
+.companyTitle {
+    flex-grow: 1;
+}
+
+.companyTitleLink {
+    color: white !important;
+}
+
+.loggedInUser {
+    padding-right: 0.5em;
+}
+
+.loggedInUserLink {
+    color: white !important;
+}
