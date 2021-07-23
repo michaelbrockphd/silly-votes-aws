@@ -9,7 +9,6 @@ export default function AppHeader() {
     const {
         isLoggedIn,
         currentUser,
-        login,
         logout
     } = useAuthorization();
     
@@ -30,7 +29,7 @@ export default function AppHeader() {
                     </Fragment>}
 
                 {!isLoggedIn &&
-                    <Button onClick={login} variant="contained" color="default" size="small">Log In</Button>}
+                    <Button href='/login' variant="contained" color="default" size="small">Log In</Button>}
             </Toolbar>
         </AppBar>
     );

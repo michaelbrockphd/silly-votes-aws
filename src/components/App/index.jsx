@@ -23,7 +23,7 @@ function App() {
                                 <Redirect to="/campaigns" />
                             </Route>
                             <Route exact path="/campaigns" component={Campaigns} />
-                            <Route exact path="/login" component={Login} />
+                            <Route exact path="/login" returnUrl="/campaigns" component={Login} />
                             <PrivateRoute exact path="/profile" loginAt="/login" component={Profile} />
                         </Switch>
                     </Router>

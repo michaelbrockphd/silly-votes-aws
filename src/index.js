@@ -1,19 +1,18 @@
 import './index.css';
 
+import Amplify from 'aws-amplify';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/App';
 import { setApiUrl } from './web-api';
-import { initialiseAuth } from './contexts/AuthorizationContext';
-import { createAuthOptions } from './amplify-utils';
 
 // Make use of any required environment variables.
 
-setApiUrl( process.env.REACT_APP_FE_WEB_API_URL );
+import ampConfig from './aws-exports';
+Amplify.configure(ampConfig);
 
-const authConfig = createAuthOptions();
-initialiseAuth(authConfig);
+setApiUrl( process.env.REACT_APP_FE_WEB_API_URL );
 
 // State the render from the App.
 

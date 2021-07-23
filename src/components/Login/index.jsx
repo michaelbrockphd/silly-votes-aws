@@ -1,54 +1,47 @@
-// Taken from https://ui.dev/react-router-v4-protected-routes-authentication/
+// Idea taken from the withAuthenticator component from Amazon.
 
-import { Button, Grid, TextField } from '@material-ui/core';
-import { useState } from 'react';
+import {
+        AmplifyAuthContainer,
+        AmplifyAuthenticator,
+        AmplifyContainer
+    } from '@aws-amplify/ui-react';
+import {
+        Button,
+        Grid,
+        TextField
+    } from '@material-ui/core';
+import { Fragment, useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { useAuthorization } from '../../contexts/AuthorizationContext';
 
-const Login = (props) => {
+const Login = (authenticatorProps, props) => {
     const {
-        login,
         isLoggedIn
     } = useAuthorization();
-        
-    const { from } = props.location.state
-                  || { from: { pathname: '/' } };
 
-    const [userEmail, setUserEmail] = useState();
+    const {
+        returnUrl 
+    } = props;
 
-    if(isLoggedIn) {
-        return <Redirect to={from} />;
-    }
-
-    const onChangeEmail = (event) => {
-        setUserEmail( event.target.value );
-    };
-
-    const onClickLogin = ( event ) => {
-        login( {
-            email: userEmail
-        } );
-    };
+    console.log( props );
+    console.log(isLoggedIn);
 
     return(
-        <form className="">
-            <Grid container direction="column" spacing={2}>
-                <Grid item xs={6}>
-                    <TextField label="email"
-                                autoComplete="off"
-                                value={userEmail}
-                                onChange={onChangeEmail} />
-                </Grid>
+        <Fragment>
+            {!isLoggedIn &&
+                <AmplifyContainer>
+                    <AmplifyAuthContainer>
+                        <AmplifyAuthenticator {...authenticatorProps} {...props} />
+                    </AmplifyAuthContainer>
+                </AmplifyContainer>}
 
-                <Grid item xs={6}>
-                    <Button onClick={onClickLogin}
-                            variant="contained"
-                            color="default"
-                            size="small">Login</Button>
-                </Grid>
-            </Grid>
-        </form>
+            {isLoggedIn &&
+                <Redirect to={{
+                    pathname: returnUrl,
+                    state: { from: props.location }
+                }} />}
+        </Fragment>
     );
 }
 
