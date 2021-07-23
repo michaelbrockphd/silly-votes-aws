@@ -5,14 +5,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/App';
-import { setApiUrl } from './web-api';
 
 // Make use of any required environment variables.
 
 import ampConfig from './aws-exports';
 Amplify.configure(ampConfig);
-
-setApiUrl( process.env.REACT_APP_FE_WEB_API_URL );
 
 // State the render from the App.
 

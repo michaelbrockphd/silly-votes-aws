@@ -1,0 +1,35 @@
+{
+  "paths": [
+    {
+      "name": "/campaigns",
+      "lambdaFunction": "svAmpCampaignsGet",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/campaigns"
+    }
+  ],
+  "resourceName": "sillyvotesampapi",
+  "apiName": "sillyvotesampapi",
+  "functionArns": [
+    {
+      "lambdaFunction": "svAmpCampaignsGet"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-sillyvotesaws-dev-162034-authRole",
+    "unAuthRoleName": "amplify-sillyvotesaws-dev-162034-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "svAmpCampaignsGet",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

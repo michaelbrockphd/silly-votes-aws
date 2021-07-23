@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "sillyvotesaws4a975dca": {}
+      },
+      "function": {
+        "svAmpCampaignsGet": {
+          "deploymentBucketName": "amplify-sillyvotesaws-dev-162034-deployment",
+          "s3Key": "amplify-builds/svAmpCampaignsGet-68632b4c576b56554c30-build.zip"
+        }
       }
     }
   }

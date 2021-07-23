@@ -1,23 +1,23 @@
-import axios from 'axios';
+import Amplify from 'aws-amplify';
 
-var baseUrl = null;
+// TODO: Make the constants below configurable via a exported method.
 
-const setApiUrl = (url) => {
-    baseUrl = url;
-};
+const apiName = 'sillyvotesampapi';
+
+const path = '/campaigns';
 
 class WebApi {
     getCampaigns() {
-        const parameters = {
-            method: 'get',
-            url: `${baseUrl}/campaigns`
+        const reqOptions = {
+            headers: {},
+            response: false
         };
 
-        return( axios( parameters ) );
+        return( Amplify.API.get( apiName, path ) );
     }
 
     addUserCampaign(authToken, freshCampaign) {
-        const reqHeaders = {
+        /*const reqHeaders = {
             Authorization: authToken
         };
 
@@ -28,11 +28,11 @@ class WebApi {
             data: freshCampaign
         };
 
-        return( axios( parameters ) );
+        return( axios( parameters ) );*/
     }
 
     deleteUserCampaign(authToken, campaign) {
-        const reqHeaders = {
+        /*const reqHeaders = {
             Authorization: authToken
         };
 
@@ -43,11 +43,11 @@ class WebApi {
             data: campaign
         };
 
-        return( axios( parameters ) );
+        return( axios( parameters ) );*/
     }
 
     getUserCampaigns(authToken) {
-        const reqHeaders = {
+        /*const reqHeaders = {
             Authorization: authToken
         };
 
@@ -57,11 +57,11 @@ class WebApi {
             headers: reqHeaders
         };
 
-        return( axios( parameters ) );
+        return( axios( parameters ) );*/
     }
 
     updateUserCampaign(authToken, updateCampaign) {
-        const reqHeaders = {
+        /*const reqHeaders = {
             Authorization: authToken
         };
 
@@ -72,12 +72,8 @@ class WebApi {
             data: updateCampaign
         };
 
-        return( axios( parameters ) );
+        return( axios( parameters ) );*/
     }
 }
 
 export default new WebApi();
-
-export {
-    setApiUrl
-};

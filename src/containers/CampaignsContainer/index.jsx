@@ -14,7 +14,7 @@ export default class CampaignContainer extends Component {
               .then((response) => {
                     this.setState( {
                         isLoading: false,
-                        campaigns: response.data
+                        campaigns: response
                     } );
               })
               .catch((err) => {
