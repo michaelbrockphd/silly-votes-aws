@@ -6,7 +6,12 @@ import { AppBar, Button, Link, Toolbar, Typography } from '@material-ui/core';
 import { useAuthorization } from '../../contexts/AuthorizationContext';
 
 export default function AppHeader() {
-    const { isLoggedIn, currentUser, logout } = useAuthorization();
+    const {
+        isLoggedIn,
+        currentUser,
+        login,
+        logout
+    } = useAuthorization();
     
     return(
         <AppBar position="static">
@@ -25,7 +30,7 @@ export default function AppHeader() {
                     </Fragment>}
 
                 {!isLoggedIn &&
-                    <Button href="/login" variant="contained" color="default" size="small">Log In</Button>}
+                    <Button onClick={login} variant="contained" color="default" size="small">Log In</Button>}
             </Toolbar>
         </AppBar>
     );

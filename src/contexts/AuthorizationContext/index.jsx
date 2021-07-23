@@ -8,25 +8,66 @@ import {
     useMemo,
     useState
 } from 'react';
+import { Auth, Hub, Cache } from 'aws-amplify';
 
 const authStorage = () => {
     return sessionStorage;
 };
 
-const getInitialState = () => {
-    var rtnIsLoggedIn = false;
+var a = Auth;
 
-    const token = authStorage().getItem( 'authorization' );
+export function initialiseAuth( options ) {
+    a.configure(options);
 
-    if(token) {
-        const decoded = jwt.decode(token);
+    Hub.listen( "auth", ( {payload: { event, data } } ) => {
+        switch (event) {
+            case "signIn":
+                //this.setState({ user: data });
+                console.log( "signedIn" );
+                break;
 
-        if(decoded) {
-            rtnIsLoggedIn = !!decoded.email;
+            case "signOut":
+                //this.setState({ user: null });
+                console.log( "signedOut" );
+                break;
+
+            default:
+                console.log( `${event}: ${data}` );
         }
-    }
+    } );
+};
 
-    return rtnIsLoggedIn;
+const getInitialState = () => {
+    a.currentAuthenticatedUser( { bypassCache : true } )
+        .then( ( data ) => {
+            /*var rtnIsLoggedIn = false;
+
+            const token = authStorage().getItem( 'authorization' );
+        
+            if(token) {
+                const decoded = jwt.decode(token);
+        
+                if(decoded) {
+                    rtnIsLoggedIn = !!decoded.email;
+                }
+            }
+        
+            return rtnIsLoggedIn;*/
+        } )
+        .catch( (err) => {
+            console.log( "no session" );
+            console.log( err );
+        });
+
+    console.log( Auth.currentCredentials() );
+
+    a.currentCredentials()
+        .then( data => {
+            console.log( `credData: ${data}` );
+        } )
+        .catch( err => {
+            console.log( `credError: ${err}` );
+        } );
 };
 
 const baseUrl = process.env.REACT_APP_FE_WEB_API_URL || 'http://localhost:9000';
@@ -46,7 +87,14 @@ export function AuthorizationProvider( {children} ) {
     }
 
     async function login( userDetails ) {
-        const reqData = {
+        const c = Cache;
+
+        a.federatedSignIn()
+            .then( cred => {
+                console.log( `credentials: ${cred}` );
+            } );
+
+        /*const reqData = {
             email: userDetails.email
         };
 
@@ -73,7 +121,7 @@ export function AuthorizationProvider( {children} ) {
             } )
             .catch( (err) => {
                 console.log( err );
-            } );
+            } );*/
     };
     
     async function logout() {
