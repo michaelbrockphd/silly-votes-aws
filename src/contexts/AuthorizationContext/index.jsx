@@ -1,14 +1,20 @@
 // Sourced from: https://dev.to/finiam/predictable-react-authentication-with-the-context-api-g10
 
-import jwt from 'jsonwebtoken';
 import {
-    createContext,
-    useContext,
-    useMemo,
-    useState
-} from 'react';
-import { Auth, Cache } from 'aws-amplify';
-import { useEffect } from 'react';
+        createContext,
+        useContext,
+        useMemo,
+        useState
+    } from 'react';
+
+import {
+        Auth,
+        Hub 
+    } from 'aws-amplify';
+    
+import {
+        useEffect
+    } from 'react';
 
 const IsAuthenticatedContext = createContext( false );
 
@@ -17,7 +23,7 @@ export function AuthorizationProvider( {children} ) {
 
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
+    function updateUser() {
         Auth.currentAuthenticatedUser()
             .then( user => {
                 if( user ) {
@@ -31,12 +37,29 @@ export function AuthorizationProvider( {children} ) {
             .catch( err => {
                 console.log( err );
             } );
+    };
+
+    useEffect(() => {
+        updateUser();
+
+        // Wire into the Hub to keep the consistency of the login state.
+
+        Hub.listen( 'auth', (data) => {
+            switch (data.payload.event) {
+
+                case 'signIn':
+                    updateUser();
+                    break;
+
+                case 'signOut':
+                    setUser(null);
+                    setIsLoggedIn(false);
+                    break;
+            }
+        } );
     }, [] );
     
     async function logout() {
-        setIsLoggedIn(false);
-        setUser(null);
-
         Auth.signOut()
             .then( () => {
                 console.log( "Signout complete" );
