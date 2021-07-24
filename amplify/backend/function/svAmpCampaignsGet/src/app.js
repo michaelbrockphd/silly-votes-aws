@@ -6,18 +6,15 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
-
 const AWS = require('aws-sdk')
-var awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-var bodyParser = require('body-parser')
-var express = require('express')
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const bodyParser = require('body-parser')
+const express = require('express')
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 
-const dynamodb = new AWS.DynamoDB.DocumentClient();
-
 let tableName = "campaigns";
+
 if(process.env.ENV && process.env.ENV !== "NONE") {
   tableName = tableName + '-' + process.env.ENV;
 }
@@ -32,12 +29,15 @@ const path = "/campaigns";
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
+
 // declare a new express app
 var app = express()
+
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
 // Enable CORS for all methods
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "*")
@@ -54,71 +54,89 @@ const convertUrlType = (param, type) => {
   }
 }
 
+
+
 /********************************
  * HTTP Get method for list objects *
  ********************************/
 
 app.get(path, function(req, res) {
-  const scanParams = {
-      TableName: tableName
-  };
+    const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-  const scanCallback = (err, matches) => {
-    if( err ) {
-        res.statusCode = 500;
-        res.json({error:`Could not load items: ${err}`});
-    }
-    else {
-        res.json(matches.Items);
-    }
-  };
+    const scanParams = {
+        TableName: tableName
+    };
 
-  dynamodb.scan(scanParams, scanCallback);
+    const scanCallback = (err, matches) => {
+        if( err ) {
+            res.statusCode = 500;
+
+            res.json({error:`Could not load items: ${err}`});
+        }
+        else {
+            res.json(matches.Items);
+        }
+    };
+
+    dynamodb.scan(scanParams, scanCallback);
 });
+
+
 
 /*****************************************
  * HTTP Get method for get single object *
  *****************************************/
 
 app.get(path + '/object' + hashKeyPath + sortKeyPath, function(req, res) {
-  var params = {};
-  if (userIdPresent && req.apiGateway) {
-    params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
-  } else {
-    params[partitionKeyName] = req.params[partitionKeyName];
-    try {
-      params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
-    } catch(err) {
-      res.statusCode = 500;
-      res.json({error: 'Wrong column type ' + err});
-    }
-  }
-  if (hasSortKey) {
-    try {
-      params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
-    } catch(err) {
-      res.statusCode = 500;
-      res.json({error: 'Wrong column type ' + err});
-    }
-  }
+    const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-  let getItemParams = {
-    TableName: tableName,
-    Key: params
-  }
+    var params = {};
 
-  dynamodb.get(getItemParams,(err, data) => {
-    if(err) {
-      res.statusCode = 500;
-      res.json({error: 'Could not load items: ' + err.message});
-    } else {
-      if (data.Item) {
-        res.json(data.Item);
-      } else {
-        res.json(data) ;
-      }
+    if (userIdPresent && req.apiGateway) {
+        params[partitionKeyName] = req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
     }
-  });
+    else {
+        params[partitionKeyName] = req.params[partitionKeyName];
+        
+        try {
+            params[partitionKeyName] = convertUrlType(req.params[partitionKeyName], partitionKeyType);
+        }
+        catch(err) {
+            res.statusCode = 500;
+
+            res.json({error: 'Wrong column type ' + err});
+        }
+    }
+    if (hasSortKey) {
+        try {
+            params[sortKeyName] = convertUrlType(req.params[sortKeyName], sortKeyType);
+        }
+        catch(err) {
+            res.statusCode = 500;
+
+            res.json({error: 'Wrong column type ' + err});
+        }
+    }
+
+    let getItemParams = {
+        TableName: tableName,
+        Key: params
+    }
+
+    dynamodb.get(getItemParams,(err, data) => {
+        if(err) {
+            res.statusCode = 500;
+            res.json({error: 'Could not load items: ' + err.message});
+        }
+        else {
+            if (data.Item) {
+                res.json(data.Item);
+            }
+            else {
+                res.json(data) ;
+            }
+        }
+    });
 });
 
 app.listen(3000, function() {
