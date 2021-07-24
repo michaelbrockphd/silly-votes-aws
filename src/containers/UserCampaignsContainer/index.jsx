@@ -30,10 +30,10 @@ const UserCampaignsContainer = (props) => {
 
     const { getToken } = useAuthorization();
 
-    const token = getToken();
+    const token = null; //getToken();
 
     useEffect(() => {
-        WebApi.getUserCampaigns( token )
+        /*WebApi.getUserCampaigns( token )
               .then((response) => {
                     dispatch({
                         type: Actions.INIT_FINISHED,
@@ -42,7 +42,7 @@ const UserCampaignsContainer = (props) => {
               })
               .catch((err) => {
                   console.log(err);
-              });
+              });*/
     }, []);
 
     const addCampaign = () => {

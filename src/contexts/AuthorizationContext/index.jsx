@@ -4,7 +4,8 @@ import {
         createContext,
         useContext,
         useMemo,
-        useState
+        useState,
+        Fragment
     } from 'react';
 
 import {
@@ -19,6 +20,11 @@ import {
 const IsAuthenticatedContext = createContext( false );
 
 export function AuthorizationProvider( {children} ) {
+    // I'm sure there are better ways, but hopefully this kludge will do for demonstration purposes.
+    //
+    // M. Brock, 2021-07-24
+    const [isInitialised, setIsInitialised] = useState(false);
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [user, setUser] = useState(null);
@@ -27,8 +33,6 @@ export function AuthorizationProvider( {children} ) {
         Auth.currentAuthenticatedUser()
             .then( user => {
                 if( user ) {
-                    console.log( user );
-
                     setUser( user );
 
                     setIsLoggedIn( true );
@@ -36,6 +40,9 @@ export function AuthorizationProvider( {children} ) {
             } )
             .catch( err => {
                 console.log( err );
+            } )
+            .finally( () => {
+                setIsInitialised(true);
             } );
     };
 
@@ -59,7 +66,7 @@ export function AuthorizationProvider( {children} ) {
         } );
     }, [] );
     
-    async function logout() {
+    function logout() {
         Auth.signOut()
             .then( () => {
                 console.log( "Signout complete" );
@@ -84,15 +91,19 @@ export function AuthorizationProvider( {children} ) {
 
     const memoedValue = useMemo(
         () => ({
-          isLoggedIn,
-          currentUser,
-          logout
+            isLoggedIn,
+            currentUser,
+            logout
         }),
         [isLoggedIn]
       );
 
     return(
-        <IsAuthenticatedContext.Provider value={memoedValue}>{children}</IsAuthenticatedContext.Provider>
+        <IsAuthenticatedContext.Provider value={memoedValue}>
+            <Fragment>
+                {isInitialised && [children]}
+            </Fragment>
+        </IsAuthenticatedContext.Provider>
     );
 };
 
