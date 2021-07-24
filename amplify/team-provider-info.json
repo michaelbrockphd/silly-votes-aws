@@ -18,7 +18,7 @@
       "function": {
         "svAmpCampaignsGet": {
           "deploymentBucketName": "amplify-sillyvotesaws-dev-162034-deployment",
-          "s3Key": "amplify-builds/svAmpCampaignsGet-68632b4c576b56554c30-build.zip"
+          "s3Key": "amplify-builds/svAmpCampaignsGet-2f6e5a4d544d3566482b-build.zip"
         }
       }
     }

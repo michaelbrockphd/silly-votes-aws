@@ -87,6 +87,7 @@ app.get(path, function(req, res) {
  * HTTP Get method for get single object *
  *****************************************/
 
+/*
 app.get(path + '/object' + hashKeyPath + sortKeyPath, function(req, res) {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -138,6 +139,7 @@ app.get(path + '/object' + hashKeyPath + sortKeyPath, function(req, res) {
         }
     });
 });
+*/
 
 app.listen(3000, function() {
     console.log("App started")
