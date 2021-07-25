@@ -80,7 +80,7 @@ app.get(path, function(req, res) {
         }
         else {
             //res.json(matches.Items);
-            res.json( [] );
+            res.json( matches.Items );
         }
     };
 

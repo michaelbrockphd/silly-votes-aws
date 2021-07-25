@@ -35,6 +35,8 @@ const UserCampaignsContainer = (props) => {
     useEffect(() => {
         WebApi.getUserCampaigns()
               .then((response) => {
+                    console.log(response);
+                    
                     dispatch({
                         type: Actions.INIT_FINISHED,
                         value: response
