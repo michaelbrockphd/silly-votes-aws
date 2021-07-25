@@ -79,7 +79,6 @@ app.get(path, function(req, res) {
             res.json({error:`Could not load items: ${err}`});
         }
         else {
-            //res.json(matches.Items);
             res.json( matches.Items );
         }
     };

@@ -44,6 +44,21 @@ export function AuthorizationProvider( {children} ) {
             .finally( () => {
                 setIsInitialised(true);
             } );
+
+        // TODO: Remove this temp code.
+        // https://stackoverflow.com/questions/66010442/get-cognito-user-attributes-in-lambda-function
+
+        Auth.currentSession()
+            .then( s => {
+                const idT = s.getIdToken();
+
+                if( idT ) {
+                    console.log( idT.getJwtToken() );
+                }
+            } )
+            .catch( e => {
+                console.log( e );
+            } );
     };
 
     useEffect(() => {
