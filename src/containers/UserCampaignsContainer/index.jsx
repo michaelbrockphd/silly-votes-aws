@@ -33,16 +33,16 @@ const UserCampaignsContainer = (props) => {
     const token = null; //getToken();
 
     useEffect(() => {
-        /*WebApi.getUserCampaigns( token )
+        WebApi.getUserCampaigns()
               .then((response) => {
                     dispatch({
                         type: Actions.INIT_FINISHED,
-                        value: response.data
+                        value: response
                     });
               })
               .catch((err) => {
                   console.log(err);
-              });*/
+              });
     }, []);
 
     const addCampaign = () => {
