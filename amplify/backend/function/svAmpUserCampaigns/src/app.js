@@ -44,10 +44,11 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 // Enable CORS for all methods
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "*")
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Credentials", true);
 
-    next()
+    next();
 });
 
 // convert url string param to expected Type
@@ -79,7 +80,15 @@ app.get(path, function(req, res) {
             res.json({error:`Could not load items: ${err}`});
         }
         else {
+            console.info("req evt:\n" + JSON.stringify(req.apiGateway.event));
+
+            console.info("req hdrs:\n" + JSON.stringify(req.headers));
+
             res.json( matches.Items );
+
+            /*res.json({
+                cReq : JSON.stringify(req)
+            });*/
         }
     };
 

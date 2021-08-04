@@ -1,6 +1,13 @@
 // Sourced from: https://dev.to/finiam/predictable-react-authentication-with-the-context-api-g10
 
 import {
+        Auth,
+        Hub 
+    } from 'aws-amplify';
+
+import jwt from 'jsonwebtoken';
+    
+import {
         createContext,
         useContext,
         useMemo,
@@ -8,11 +15,6 @@ import {
         Fragment
     } from 'react';
 
-import {
-        Auth,
-        Hub 
-    } from 'aws-amplify';
-    
 import {
         useEffect
     } from 'react';
@@ -29,23 +31,9 @@ export function AuthorizationProvider( {children} ) {
 
     const [user, setUser] = useState(null);
 
-    function updateUser() {
-        Auth.currentAuthenticatedUser()
-            .then( user => {
-                if( user ) {
-                    setUser( user );
+    const [userToken, setUserToken] = useState(null);
 
-                    setIsLoggedIn( true );
-                }
-            } )
-            .catch( err => {
-                console.log( err );
-            } )
-            .finally( () => {
-                setIsInitialised(true);
-            } );
-
-        // TODO: Remove this temp code.
+    const updateUserToken = () => {
         // https://stackoverflow.com/questions/66010442/get-cognito-user-attributes-in-lambda-function
 
         Auth.currentSession()
@@ -53,16 +41,33 @@ export function AuthorizationProvider( {children} ) {
                 const idT = s.getIdToken();
 
                 if( idT ) {
-                    console.log( idT.getJwtToken() );
+                    const token = idT.getJwtToken();
+
+                    console.log( token );
+
+                    setUserToken(token);
+
+                    const decoded = jwt.decode(token);
+
+                    setUser( {
+                        username: decoded['cognito:username'],
+
+                        email: decoded['email']
+                    } );
+
+                    setIsLoggedIn( true );
                 }
             } )
             .catch( e => {
                 console.log( e );
+            } )
+            .finally( () => {
+                setIsInitialised(true);
             } );
     };
 
     useEffect(() => {
-        updateUser();
+        updateUserToken();
 
         // Wire into the Hub to keep the consistency of the login state.
 
@@ -70,12 +75,13 @@ export function AuthorizationProvider( {children} ) {
             switch (data.payload.event) {
 
                 case 'signIn':
-                    updateUser();
+                    updateUserToken();
                     break;
 
                 case 'signOut':
-                    setUser(null);
                     setIsLoggedIn(false);
+                    setUser(null);
+                    setUserToken(null);
                     break;
             }
         } );
@@ -91,23 +97,19 @@ export function AuthorizationProvider( {children} ) {
             } );
     };
 
-    function currentUser() {
-        var rtn = null;
+    const currentUser = () => {
+        return( user );
+    };
 
-        if( user ) {
-            rtn = {
-                username: user.username,
-                email: user.attributes.email
-            };
-        }
-
-        return( rtn );
+    const currentUserToken = () => {
+        return( userToken );
     };
 
     const memoedValue = useMemo(
         () => ({
             isLoggedIn,
             currentUser,
+            currentUserToken,
             logout
         }),
         [isLoggedIn]

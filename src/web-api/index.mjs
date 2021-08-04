@@ -1,5 +1,7 @@
 import Amplify from 'aws-amplify';
 
+import {useAuthorization} from '../contexts/AuthorizationContext';
+
 // TODO: Make the constants below configurable via a exported method.
 
 const NAME_API = 'sillyvotesampapi';
@@ -9,11 +11,6 @@ const PATH_CAMPAIGNS_USER = '/usercampaigns';
 
 class WebApi {
     getCampaigns() {
-        const reqOptions = {
-            headers: {},
-            response: false
-        };
-
         return( Amplify.API.get( NAME_API, PATH_CAMPAIGNS ) );
     }
 
@@ -47,25 +44,8 @@ class WebApi {
         return( axios( parameters ) );*/
     }
 
-    getUserCampaigns() {
-        const reqOptions = {
-            headers: {},
-            response: false
-        };
-
+    getUserCampaigns(token) {
         return( Amplify.API.get( NAME_API, PATH_CAMPAIGNS_USER ) );
-
-        /*const reqHeaders = {
-            Authorization: authToken
-        };
-
-        const parameters = {
-            method: 'get',
-            url: `${baseUrl}/usercampaigns`,
-            headers: reqHeaders
-        };
-
-        return( axios( parameters ) );*/
     }
 
     updateUserCampaign(authToken, updateCampaign) {

@@ -28,12 +28,12 @@ const UserCampaignsContainer = (props) => {
         isEditingDetails,
         campaignDetails }, dispatch] = useReducer(reducer, initialState);
 
-    const { getToken } = useAuthorization();
-
-    const token = null; //getToken();
+    const { currentUserToken } = useAuthorization();
 
     useEffect(() => {
-        WebApi.getUserCampaigns()
+        const token = currentUserToken();
+
+        WebApi.getUserCampaigns( token )
               .then((response) => {
                     console.log(response);
                     
@@ -71,6 +71,8 @@ const UserCampaignsContainer = (props) => {
     const deleteCampaign = (campaign) => {
         dispatch({ type: Actions.REMOVE_CAMPAIGN_INIT });
 
+        const token = currentUserToken();
+
         WebApi.deleteUserCampaign( token, campaign )
               .then((response) => {
                   dispatch({
@@ -94,6 +96,8 @@ const UserCampaignsContainer = (props) => {
     const saveDetails = (data) => {
         dispatch({ type: Actions.SAVE_CAMPAIGN_INIT });
 
+        const token = currentUserToken();
+
         WebApi.addUserCampaign( token, data )
               .then((response) => {
                   dispatch({
@@ -112,6 +116,8 @@ const UserCampaignsContainer = (props) => {
 
     const updateDetails = (data) => {
         dispatch({ type: Actions.UPDATE_CAMPAIGN_INIT });
+
+        const token = currentUserToken();
 
         WebApi.updateUserCampaign( token, data )
               .then((response) => {
