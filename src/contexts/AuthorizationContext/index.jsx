@@ -21,6 +21,12 @@ import {
 
 const IsAuthenticatedContext = createContext( false );
 
+var awsAuth = Auth;
+
+export function configureAuth( config ) {
+    awsAuth.configure(config);
+};
+
 export function AuthorizationProvider( {children} ) {
     // I'm sure there are better ways, but hopefully this kludge will do for demonstration purposes.
     //
@@ -36,14 +42,13 @@ export function AuthorizationProvider( {children} ) {
     const updateUserToken = () => {
         // https://stackoverflow.com/questions/66010442/get-cognito-user-attributes-in-lambda-function
 
-        Auth.currentSession()
+        awsAuth
+            .currentSession()
             .then( s => {
                 const idT = s.getIdToken();
 
                 if( idT ) {
                     const token = idT.getJwtToken();
-
-                    console.log( token );
 
                     setUserToken(token);
 
@@ -86,9 +91,21 @@ export function AuthorizationProvider( {children} ) {
             }
         } );
     }, [] );
+
+    const login = (userName, userPassword) => {
+        awsAuth
+            .signIn(userName, userPassword)
+            .then(res => {
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    };
     
-    function logout() {
-        Auth.signOut()
+    const logout = () => {
+        awsAuth
+            .signOut()
             .then( () => {
                 console.log( "Signout complete" );
             } )
@@ -110,6 +127,7 @@ export function AuthorizationProvider( {children} ) {
             isLoggedIn,
             currentUser,
             currentUserToken,
+            login,
             logout
         }),
         [isLoggedIn]

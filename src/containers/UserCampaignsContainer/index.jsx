@@ -12,7 +12,6 @@ import WebApi from '../../web-api';
 
 const initialState = {
     isLoading: true,
-    isBusy: false,
     campaigns: [],
     showCampaignDetails: false,
     isEditingDetails: false,
@@ -22,7 +21,6 @@ const initialState = {
 const UserCampaignsContainer = (props) => {
     const [{
         isLoading,
-        isBusy,
         campaigns,
         showCampaignDetails,
         isEditingDetails,
@@ -39,7 +37,7 @@ const UserCampaignsContainer = (props) => {
                     
                     dispatch({
                         type: Actions.INIT_FINISHED,
-                        value: response
+                        value: response.data
                     });
               })
               .catch((err) => {

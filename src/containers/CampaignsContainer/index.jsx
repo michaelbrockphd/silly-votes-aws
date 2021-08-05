@@ -1,5 +1,11 @@
-import { Component, Fragment } from 'react';
-import CampaignTable, { CampaignTableLoading } from '../../components/CampaignTable';
+import { 
+        Component,
+        Fragment
+    } from 'react';
+import
+    CampaignTable, {
+        CampaignTableLoading
+    } from '../../components/CampaignTable';
 
 import WebApi from '../../web-api';
 
@@ -14,7 +20,7 @@ export default class CampaignContainer extends Component {
               .then((response) => {
                     this.setState( {
                         isLoading: false,
-                        campaigns: response
+                        campaigns: response.data
                     } );
               })
               .catch((err) => {
