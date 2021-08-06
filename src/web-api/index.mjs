@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // Constants
 
-const PATH_CAMPAIGNS = '/campaigns';
-const PATH_CAMPAIGNS_USER = '/usercampaigns';
+const PATH_CAMPAIGNS = 'campaigns';
+const PATH_CAMPAIGNS_USER = 'usercampaigns';
 
 // Settings
 
@@ -26,18 +26,18 @@ class WebApi {
     }
 
     addUserCampaign(authToken, freshCampaign) {
-        /*const reqHeaders = {
+        const reqHeaders = {
             Authorization: authToken
         };
 
         const parameters = {
             method: 'post',
-            url: `${baseUrl}/usercampaigns`,
+            url: `${baseUrl}/${PATH_CAMPAIGNS_USER}`,
             headers: reqHeaders,
             data: freshCampaign
         };
 
-        return( axios( parameters ) );*/
+        return( axios( parameters ) );
     }
 
     deleteUserCampaign(authToken, campaign) {

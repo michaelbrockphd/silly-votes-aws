@@ -33,8 +33,6 @@ const UserCampaignsContainer = (props) => {
 
         WebApi.getUserCampaigns( token )
               .then((response) => {
-                    console.log(response);
-                    
                     dispatch({
                         type: Actions.INIT_FINISHED,
                         value: response.data
@@ -47,8 +45,8 @@ const UserCampaignsContainer = (props) => {
 
     const addCampaign = () => {
         var fresh = {
-            _id: null,
-            title: '',
+            id: null,
+            description: '',
             poolSize: 0,
             choices: ['','']
         };
@@ -79,11 +77,10 @@ const UserCampaignsContainer = (props) => {
                   });
               })
               .catch((err) => {
-                  alert( "Save failed." );
-
-                  console.log(err);
-
-                  dispatch({ type: Actions.REMOVE_CAMPAIGN_FAIL });
+                  dispatch({
+                      type: Actions.REMOVE_CAMPAIGN_FAIL,
+                      value: err
+                  });
               });
     };
 
@@ -104,11 +101,10 @@ const UserCampaignsContainer = (props) => {
                   });
               })
               .catch((err) => {
-                  alert( "Save failed." );
-
-                  console.log(err);
-
-                  dispatch({ type: Actions.SAVE_CAMPAIGN_FAIL });
+                  dispatch({
+                      type: Actions.SAVE_CAMPAIGN_FAIL,
+                      value: err
+                  });
               });
     };
 

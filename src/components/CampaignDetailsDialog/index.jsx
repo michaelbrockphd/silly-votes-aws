@@ -61,7 +61,7 @@ const CampaignDetailsDialog = (props) => {
     const freshData = () => {
         var rtn = {
             ...data,
-            title: title,
+            description: title,
             poolSize: poolSize,
             choices: [choice1, choice2]
         };

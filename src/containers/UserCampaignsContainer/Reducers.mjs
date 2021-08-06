@@ -30,12 +30,32 @@ const reduceEditCampaign = (state, target) => {
     return( rtn );
 };
 
+const reduceRemoveCampaignFail = (state, error) => {
+    console.log(error);
+
+    alert( "Remove failed." );
+    
+    var rtn = { ...state, isBusy: false }
+
+    return rtn;
+};
+
 const reduceRemoveCampaignSuccess = (state, target) => {
     const modifiedCampaigns = state.campaigns.filter( c => c._id !== target.value._id );
 
     const rtn = {...state, campaigns: modifiedCampaigns};
 
     return( rtn );
+};
+
+const reduceSaveCampaignFail = (state, error) => {
+    console.log(error);
+
+    alert( "Save failed." );
+    
+    var rtn = { ...state, isBusy: false }
+
+    return rtn;
 };
 
 const reduceSaveCampaignSuccess = (state, target) => {
@@ -92,7 +112,7 @@ const reducer = (state, action) => {
             return { ...state, isLoading: false, campaigns: action.value };
 
         case Actions.REMOVE_CAMPAIGN_FAIL:
-            return { ...state, isBusy: false };
+            return reduceRemoveCampaignFail(state, action);
 
         case Actions.REMOVE_CAMPAIGN_INIT:
             return { ...state, isBusy: true };
@@ -101,7 +121,7 @@ const reducer = (state, action) => {
             return reduceRemoveCampaignSuccess(state, action);
 
         case Actions.SAVE_CAMPAIGN_FAIL:
-            return { ...state, isBusy: false };
+            return reduceSaveCampaignFail(state, action);
 
         case Actions.SAVE_CAMPAIGN_INIT:
             return { ...state, isBusy: true };
