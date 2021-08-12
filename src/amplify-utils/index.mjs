@@ -15,14 +15,14 @@ const createAuthOptions = () => {
             responseType: "code"  // code or token
         },
 
-        federationTarget: "COGNITO_USER_POOLS",*/
+        federationTarget: "COGNITO_USER_POOLS",
 
         cookieStorage: {
             domain: 'localhost',
             secure: false,
             path: '/',
             expires: 365,
-          }
+          }*/
     };
     
     return(rtn);
