@@ -17,12 +17,12 @@ const setApiUrl = (url) => {
 
 class WebApi {
     getCampaigns() {
-        const parameters = {
+        const reqParameters = {
             method: 'get',
             url: `${baseUrl}/${PATH_CAMPAIGNS}`
         };
 
-        return( axios( parameters ) );
+        return( axios( reqParameters ) );
     }
 
     addUserCampaign(authToken, freshCampaign) {
@@ -30,14 +30,14 @@ class WebApi {
             Authorization: authToken
         };
 
-        const parameters = {
+        const reqParameters = {
             method: 'post',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}`,
             headers: reqHeaders,
             data: freshCampaign
         };
 
-        return( axios( parameters ) );
+        return( axios( reqParameters ) );
     }
 
     deleteUserCampaign(authToken, campaign) {
@@ -60,28 +60,28 @@ class WebApi {
             Authorization: authToken
         };
 
-        const parameters = {
+        const reqParameters = {
             method: 'get',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}`,
             headers: reqHeaders
         };
 
-        return( axios( parameters ) );
+        return( axios( reqParameters ) );
     }
 
     updateUserCampaign(authToken, updateCampaign) {
-        /*const reqHeaders = {
+        const reqHeaders = {
             Authorization: authToken
         };
 
-        const parameters = {
+        const reqParameters = {
             method: 'put',
-            url: `${baseUrl}/usercampaigns/${updateCampaign._id}`,
+            url: `${baseUrl}/usercampaigns/${updateCampaign.id}`,
             headers: reqHeaders,
             data: updateCampaign
         };
 
-        return( axios( parameters ) );*/
+        return( axios( reqParameters ) );
     }
 }
 

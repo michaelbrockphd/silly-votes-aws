@@ -7,6 +7,7 @@ import CampaignTable, { CampaignTableLoading } from '../../components/CampaignTa
 import CampaignDetailsDialog from '../../components/CampaignDetailsDialog';
 
 import Actions from './Actions.mjs';
+import { getIdGenerator } from '../../data';
 import reducer from './Reducers.mjs';
 import WebApi from '../../web-api';
 
@@ -17,6 +18,8 @@ const initialState = {
     isEditingDetails: false,
     campaignDetails: null
 };
+
+const idGenerator = getIdGenerator();
 
 const UserCampaignsContainer = (props) => {
     const [{
@@ -45,7 +48,7 @@ const UserCampaignsContainer = (props) => {
 
     const addCampaign = () => {
         var fresh = {
-            id: null,
+            id: idGenerator.next().value,
             description: '',
             poolSize: 0,
             choices: ['','']
@@ -95,9 +98,13 @@ const UserCampaignsContainer = (props) => {
 
         WebApi.addUserCampaign( token, data )
               .then((response) => {
+                  // Let's be sneaky and pull out the new ID before passing it
+                  // to the reducer.
+                  data.id = response.data.newId;
+
                   dispatch({
                       type: Actions.SAVE_CAMPAIGN_SUCCESS,
-                      value: response.data
+                      value: data
                   });
               })
               .catch((err) => {
