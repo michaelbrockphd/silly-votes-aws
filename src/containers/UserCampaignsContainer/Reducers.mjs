@@ -79,7 +79,7 @@ const reduceUpdateCampaignSuccess = (state, target) => {
     var original = state.campaigns
                         .filter( c => c.id === campaign.id )[ 0 ];
 
-    original.title = campaign.title;
+    original.description = campaign.description;
     original.poolSize = campaign.poolSize;
     original.choices = campaign.choices;
 
