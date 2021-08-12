@@ -27,7 +27,7 @@ const CampaignDetailsDialog = (props) => {
 
     useEffect(() => {
         if(data) {
-            setTitle(data.title);
+            setTitle(data.description);
             setPoolSize(data.poolSize);
             setChoice1(data.choices[0]);
             setChoice2(data.choices[1]);

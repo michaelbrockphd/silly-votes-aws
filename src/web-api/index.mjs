@@ -76,7 +76,7 @@ class WebApi {
 
         const reqParameters = {
             method: 'put',
-            url: `${baseUrl}/usercampaigns/${updateCampaign.id}`,
+            url: `${baseUrl}/${PATH_CAMPAIGNS_USER}/${updateCampaign.id}`,
             headers: reqHeaders,
             data: updateCampaign
         };

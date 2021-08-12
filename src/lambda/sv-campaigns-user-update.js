@@ -31,8 +31,6 @@ exports.handler = async (event) => {
             id: updateId
         },
         
-        // TODO: Add a filter expression to ensure it updates only happen to campaigns the user has created.
-        
         UpdateExpression: "SET #descriptionCur = :descriptionUpd, #poolSizeCur = :poolSizeUpd, #choicesCur = :choicesUpd",
         
         ConditionExpression: "#campaignOwner = :reqEmail",
@@ -70,7 +68,8 @@ exports.handler = async (event) => {
     await db.update( updateParams, updateCallback ).promise();
     
     const response = {
-        statusCode: resultCode
+        statusCode: resultCode,
+        headers: HDRS_CORS
     };
     
     return response;
