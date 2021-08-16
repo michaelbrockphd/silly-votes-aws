@@ -10,7 +10,7 @@ This is so it can be learned what it is Amplify does on one's behalf (e.g. what 
 
 The diagram below shows the planned goal of Silly Votes on AWS.  Despite its name, the design of Silly Votes is anything but.
 
-![Silly Votes Design](./silly-votes-aws.png)
+![Silly Votes Design](./silly-votes-aws-v2.png)
 
 Unlike the Docker version, authentication is done by a separate service (as I should have done in the first place!), in this case, AWS Cognito.
 
