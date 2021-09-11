@@ -1,13 +1,13 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 // Constants
 
-const PATH_CAMPAIGNS = 'campaigns';
-const PATH_CAMPAIGNS_USER = 'usercampaigns';
+const PATH_CAMPAIGNS: string = 'campaigns';
+const PATH_CAMPAIGNS_USER: string = 'usercampaigns';
 
 // Settings
 
-var baseUrl = null;
+var baseUrl: string = null;
 
 const setApiUrl = (url) => {
     baseUrl = url;
@@ -17,7 +17,7 @@ const setApiUrl = (url) => {
 
 class WebApi {
     getCampaigns() {
-        const reqParameters = {
+        const reqParameters: AxiosRequestConfig = {
             method: 'get',
             url: `${baseUrl}/${PATH_CAMPAIGNS}`
         };
@@ -30,7 +30,7 @@ class WebApi {
             Authorization: authToken
         };
 
-        const reqParameters = {
+        const reqParameters: AxiosRequestConfig = {
             method: 'post',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}`,
             headers: reqHeaders,
@@ -45,7 +45,7 @@ class WebApi {
             Authorization: authToken
         };
 
-        const reqParameters = {
+        const reqParameters: AxiosRequestConfig = {
             method: 'delete',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}/${campaign.id}`,
             headers: reqHeaders
@@ -59,7 +59,7 @@ class WebApi {
             Authorization: authToken
         };
 
-        const reqParameters = {
+        const reqParameters: AxiosRequestConfig = {
             method: 'get',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}`,
             headers: reqHeaders
@@ -73,7 +73,7 @@ class WebApi {
             Authorization: authToken
         };
 
-        const reqParameters = {
+        const reqParameters: AxiosRequestConfig = {
             method: 'put',
             url: `${baseUrl}/${PATH_CAMPAIGNS_USER}/${updateCampaign.id}`,
             headers: reqHeaders,

@@ -1,8 +1,10 @@
-import Actions from './Actions.mjs';
+import Actions from './Actions';
+import { ICampaignContainerState } from './CampaignContainerState';
+import { IDispatchTarget } from '../../dispatch/DispatchTarget';
 
 // Individual reducers for more complex actions.
 
-const reduceAddCampaign = (state, target) => {
+const reduceAddCampaign = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
     var rtn = {
         ...state,
         isEditingDetails: false,
@@ -13,7 +15,7 @@ const reduceAddCampaign = (state, target) => {
     return( rtn );
 };
 
-const reduceEditCampaign = (state, target) => {
+const reduceEditCampaign = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
     // Note: if a deep clone is needed, it is suggested to simply serialize and deserialize via JSON.
     //
     // https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/122704#122704
@@ -30,8 +32,8 @@ const reduceEditCampaign = (state, target) => {
     return( rtn );
 };
 
-const reduceRemoveCampaignFail = (state, error) => {
-    console.log(error);
+const reduceRemoveCampaignFail = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
+    console.log(target.value);
 
     alert( "Remove failed." );
     
@@ -40,7 +42,7 @@ const reduceRemoveCampaignFail = (state, error) => {
     return rtn;
 };
 
-const reduceRemoveCampaignSuccess = (state, target) => {
+const reduceRemoveCampaignSuccess = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
     const modifiedCampaigns = state.campaigns.filter( c => c.id !== target.value.id );
 
     const rtn = {...state, campaigns: modifiedCampaigns};
@@ -48,8 +50,8 @@ const reduceRemoveCampaignSuccess = (state, target) => {
     return( rtn );
 };
 
-const reduceSaveCampaignFail = (state, error) => {
-    console.log(error);
+const reduceSaveCampaignFail = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
+    console.log(target.value);
 
     alert( "Save failed." );
     
@@ -58,7 +60,7 @@ const reduceSaveCampaignFail = (state, error) => {
     return rtn;
 };
 
-const reduceSaveCampaignSuccess = (state, target) => {
+const reduceSaveCampaignSuccess = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
     const campaign = target.value;
 
     var updatedCampaigns = [ ...state.campaigns, campaign ];
@@ -73,7 +75,7 @@ const reduceSaveCampaignSuccess = (state, target) => {
     return(rtn);
 };
 
-const reduceUpdateCampaignSuccess = (state, target) => {
+const reduceUpdateCampaignSuccess = (state: ICampaignContainerState, target: IDispatchTarget): ICampaignContainerState => {
     const campaign = target.value;
 
     var original = state.campaigns
@@ -94,7 +96,7 @@ const reduceUpdateCampaignSuccess = (state, target) => {
 
 // The main reducer.
 
-const reducer = (state, action) => {
+const reducer = (state: ICampaignContainerState, action: IDispatchTarget): ICampaignContainerState => {
     switch(action.type) {
         case Actions.ADD_CAMPAIGN:
             return reduceAddCampaign(state, action);

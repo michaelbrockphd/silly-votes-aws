@@ -6,17 +6,19 @@ import { useAuthorization } from '../../contexts/AuthorizationContext';
 import CampaignTable, { CampaignTableLoading } from '../../components/CampaignTable';
 import CampaignDetailsDialog from '../../components/CampaignDetailsDialog';
 
-import Actions from './Actions.mjs';
+import Actions from './Actions';
+import { ICampaignContainerState } from './CampaignContainerState';
 import { getIdGenerator } from '../../data';
-import reducer from './Reducers.mjs';
+import reducer from './Reducers';
 import WebApi from '../../web-api';
 
-const initialState = {
+const initialState: ICampaignContainerState = {
     isLoading: true,
     campaigns: [],
     showCampaignDetails: false,
     isEditingDetails: false,
-    campaignDetails: null
+    campaignDetails: null,
+    isBusy: false
 };
 
 const idGenerator = getIdGenerator();
@@ -68,7 +70,10 @@ const UserCampaignsContainer = (props) => {
     };
 
     const deleteCampaign = (campaign) => {
-        dispatch({ type: Actions.REMOVE_CAMPAIGN_INIT });
+        dispatch({
+            type: Actions.REMOVE_CAMPAIGN_INIT,
+            value: null
+        });
 
         const token = currentUserToken();
 
@@ -88,11 +93,17 @@ const UserCampaignsContainer = (props) => {
     };
 
     const closeDetails = () => {
-        dispatch({ type: Actions.CLOSE_DETAILS });
+        dispatch({
+            type: Actions.CLOSE_DETAILS,
+            value: null
+        });
     };
 
     const saveDetails = (data) => {
-        dispatch({ type: Actions.SAVE_CAMPAIGN_INIT });
+        dispatch({
+            type: Actions.SAVE_CAMPAIGN_INIT,
+            value: null
+        });
 
         const token = currentUserToken();
 
@@ -116,7 +127,10 @@ const UserCampaignsContainer = (props) => {
     };
 
     const updateDetails = (data) => {
-        dispatch({ type: Actions.UPDATE_CAMPAIGN_INIT });
+        dispatch({
+            type: Actions.UPDATE_CAMPAIGN_INIT,
+            value: null
+        });
 
         const token = currentUserToken();
 
@@ -132,7 +146,10 @@ const UserCampaignsContainer = (props) => {
 
                   console.log(err);
 
-                  dispatch({ type: Actions.UPDATE_CAMPAIGN_FAIL });
+                  dispatch({
+                      type: Actions.UPDATE_CAMPAIGN_FAIL,
+                      value: null
+                    });
               });
     };
 
