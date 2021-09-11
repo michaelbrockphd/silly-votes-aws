@@ -2,9 +2,9 @@
 
 Self exercise to create Silly Votes (again) but using AWS Lambdas and other services.
 
-At the time of writing, attempts are being made to build the site from scratch and not with Amplify.
+At the time of writing, attempts are being made to build the site from scratch and using only the Amplify libraries.
 
-This is so it can be learned what it is Amplify does on one's behalf (e.g. what permissions/policies via IAM are set).
+While Amplify can be used to create Lambdas, etc., it is **very** opinionated and appeared to resist attempts to trim down and simplify some features (e.g.: letting me set the IAM permissions of individual Lambda).
 
 ## General Design
 
