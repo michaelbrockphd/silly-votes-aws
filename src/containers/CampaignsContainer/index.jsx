@@ -1,44 +1,41 @@
 import { 
-        Component,
-        Fragment
-    } from 'react';
-import
-    CampaignTable, {
-        CampaignTableLoading
-    } from '../../components/CampaignTable';
+    Fragment, useEffect } from 'react';
+import {
+    useDispatch,
+    useSelector } from 'react-redux'
 
-import WebApi from '../../web-api';
+import CampaignTable, {
+    CampaignTableLoading } from '../../components/CampaignTable';
 
-export default class CampaignContainer extends Component {
-    state = {
-        isLoading: true,
-        campaigns: []
-    };
+import {
+    loadAllCampaigns } from '../../web-api-thrunks';
 
-    componentDidMount() {
-        WebApi.getCampaigns()
-              .then((response) => {
-                    this.setState( {
-                        isLoading: false,
-                        campaigns: response.data
-                    } );
-              })
-              .catch((err) => {
-                  console.log(err);
-              });
-    }
-
-    render() {
-        const loading = this.state.isLoading;
-        
-        return(
-            <Fragment>
-                {loading && 
-                    <CampaignTableLoading />}
-
-                {!loading &&
-                    <CampaignTable campaigns={this.state.campaigns} />}
-            </Fragment>
-        );
-    }
+const campaignsStoreSelector = (state) => {
+    return( state.campaigns );
 };
+
+const CampaignContainer = () => {
+    const campaignsStore = useSelector(campaignsStoreSelector);
+
+    const dispatch = useDispatch();
+
+    const {
+        campaigns,
+        loading } = campaignsStore;
+
+    useEffect( () => {
+        dispatch(loadAllCampaigns());
+    }, [loading] );
+        
+    return(
+        <Fragment>
+            {loading && 
+                <CampaignTableLoading />}
+
+            {!loading &&
+                <CampaignTable campaigns={campaigns} />}
+        </Fragment>
+    );
+};
+
+export default CampaignContainer;
