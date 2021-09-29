@@ -12,11 +12,25 @@ const {
 
 const STORE_NAME = "campaigns";
 
+const NAME_ADD_USER_CAMPAIGNS = "addUserCampaign"
 const NAME_LOAD_ALL_CAMPAIGNS = "loadAllCampaigns"
 const NAME_LOAD_ALL_USER_CAMPAIGNS = "loadAllUserCampaigns"
 
 
 // Thunk Implementations //////////////////////////////////////////////////////
+
+const addUserCampaign = createAsyncThunk(
+    `${STORE_NAME}/${NAME_ADD_USER_CAMPAIGNS}`,
+    async (payload) => {
+        const {
+            token,
+            campaign } = payload;
+
+        const response = await webApi.addUserCampaign(token, campaign);
+
+        return response.data;
+    }
+);
 
 const loadAllCampaigns = createAsyncThunk(
     `${STORE_NAME}/${NAME_LOAD_ALL_CAMPAIGNS}`,
@@ -37,10 +51,10 @@ const loadAllUserCampaigns = createAsyncThunk(
 );
 
 
-
 // Exportation ////////////////////////////////////////////////////////////////
 
 export {
+    addUserCampaign,
     loadAllCampaigns,
     loadAllUserCampaigns
 };

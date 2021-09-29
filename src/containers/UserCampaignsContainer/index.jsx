@@ -17,6 +17,7 @@ import { getIdGenerator } from '../../data';
 import {
     campaignAdded } from '../../slices/campaignsSlice'
 import {
+    addUserCampaign,
     loadAllUserCampaigns } from '../../web-api-thrunks';
 
 const idGenerator = getIdGenerator();
@@ -51,7 +52,7 @@ const UserCampaignsContainer = (props) => {
         const token = currentUserToken();
 
         storeDispatch(loadAllUserCampaigns(token));
-    }, []);
+    }, [isLoading]);
 
     const addCampaign = () => {
         var fresh = {
@@ -67,11 +68,8 @@ const UserCampaignsContainer = (props) => {
         });
     };
 
-    const editCampaign = (campaign) => {
-        containerDispatch({
-            type: ContainerActions.EDIT_CAMPAIGN,
-            value: campaign
-        });
+    const closeDetails = () => {
+        containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
     };
 
     const deleteCampaign = (campaign) => {
@@ -94,32 +92,28 @@ const UserCampaignsContainer = (props) => {
               });*/
     };
 
-    const closeDetails = () => {
-        containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
+    const editCampaign = (campaign) => {
+        containerDispatch({
+            type: ContainerActions.EDIT_CAMPAIGN,
+            value: campaign
+        });
     };
 
-    const saveDetails = (data) => {
-        /*dispatch({ type: Actions.SAVE_CAMPAIGN_INIT });
-
+    const addDetails = (campaign) => {
         const token = currentUserToken();
 
-        WebApi.addUserCampaign( token, data )
-              .then((response) => {
-                  // Let's be sneaky and pull out the new ID before passing it
-                  // to the reducer.
-                  data.id = response.data.newId;
+        //data.id = response.data.newId;
 
-                  dispatch({
-                      type: Actions.SAVE_CAMPAIGN_SUCCESS,
-                      value: data
-                  });
-              })
-              .catch((err) => {
-                  dispatch({
-                      type: Actions.SAVE_CAMPAIGN_FAIL,
-                      value: err
-                  });
-              });*/
+        storeDispatch(addUserCampaign( { token, campaign } ))
+            .then( () => {
+                containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
+            } )
+            .catch( (err) => {
+                containerDispatch({
+                    type: ContainerActions.SAVE_CAMPAIGN_FAIL,
+                    value: err
+                });
+            } );
     };
 
     const updateDetails = (data) => {
@@ -162,7 +156,7 @@ const UserCampaignsContainer = (props) => {
                 isEditing={isEditingDetails}
                 onClose={closeDetails}
                 onCancel={closeDetails}
-                onConfirm={isEditingDetails ? updateDetails : saveDetails} />
+                onConfirm={isEditingDetails ? updateDetails : addDetails} />
         </Fragment>
     );
 };

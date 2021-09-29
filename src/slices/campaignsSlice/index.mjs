@@ -1,6 +1,7 @@
 import redux_toolkit from '@reduxjs/toolkit';
 
 import {
+    addUserCampaign,
     loadAllCampaigns,
     loadAllUserCampaigns } from '../../web-api-thrunks';
 
@@ -84,6 +85,14 @@ const reduceUpdateCampaign = (state, target) => {
 
 // Thunk Callbacks ////////////////////////////////////////////////////////////
 
+const addUserCampaignSuccessful = (state, action) => {
+    console.log(action.payload.id);
+
+    let updatedCampaigns = [...state.campaigns, action.payload];
+
+    state.campaigns = updatedCampaigns;
+};
+
 const loadAllCampaignsSuccessful = (state, action) => {
     state.campaigns = action.payload;
 
@@ -100,6 +109,11 @@ const loadAllUserCampaignsSuccessful = (state, action) => {
 // Slice Creation /////////////////////////////////////////////////////////////
 
 const extraReducersBuilder = (builder) => {
+    builder.addCase(
+        addUserCampaign.fulfilled,
+        addUserCampaignSuccessful
+    );
+
     builder.addCase(
         loadAllCampaigns.fulfilled,
         loadAllCampaignsSuccessful

@@ -19,15 +19,15 @@ exports.handler = async (event) => {
     
     // Taken from SO: https://stackoverflow.com/questions/11721308/how-to-make-a-uuid-in-dynamodb
     
-    const freshId = crypto.randomUUID();
+    const insertId = crypto.randomUUID();
     
-    const body = JSON.parse(event.body);
+    const requestBody = JSON.parse(event.body);
     
-    const tempId = body.id;
-    
-    const freshCampaign = {...body, id: freshId};
-    
-    freshCampaign.owner = email;
+    const insertCampaign = {
+        ...requestBody,
+        id: insertId,
+        owner: email
+    };
     
     // Seriously - DO NOT create a client to ANY database OUTSIDE even handles!
     
@@ -38,7 +38,7 @@ exports.handler = async (event) => {
     const putParams = {
         TableName: "sv-campaigns",
         
-        Item: freshCampaign
+        Item: insertCampaign
     };
     
     const putCallback = ( err, data ) => {
@@ -48,12 +48,9 @@ exports.handler = async (event) => {
             resultCode = HTTP_SERVER_ERROR_INTERNAL;
         }
         else {
-            const outcome = {
-                tempId: tempId,
-                newId: freshId
-            };
-            
-            const json = JSON.stringify(outcome);
+            // To save headaches, just return the complete, insertion campaign.
+
+            const json = JSON.stringify(insertCampaign);
           
             results = json;
         }
