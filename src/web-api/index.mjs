@@ -96,10 +96,12 @@ export {
     setApiUrl
 };
 
-export default {
+const allReducers = {
     addUserCampaign,
     deleteUserCampaign,
     getCampaigns,
     getUserCampaigns,
     updateUserCampaign
 };
+
+export default allReducers;

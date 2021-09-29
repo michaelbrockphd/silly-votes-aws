@@ -2,6 +2,7 @@ import redux_toolkit from '@reduxjs/toolkit';
 
 import {
     addUserCampaign,
+    deleteUserCampaign,
     loadAllCampaigns,
     loadAllUserCampaigns,
     updateUserCampaign } from '../../web-api-thrunks';
@@ -87,11 +88,17 @@ const reduceUpdateCampaign = (state, target) => {
 // Thunk Callbacks ////////////////////////////////////////////////////////////
 
 const addUserCampaignSuccessful = (state, action) => {
-    console.log(action.payload.id);
-
     let updatedCampaigns = [...state.campaigns, action.payload];
 
     state.campaigns = updatedCampaigns;
+};
+
+const deleteUserCampaignSuccessful = (state, action) => {
+    const campaign = action.payload;
+
+    const filteredCampaigns = state.campaigns.filter( c => c.id !== campaign.id );
+
+    state.campaigns = filteredCampaigns;
 };
 
 const loadAllCampaignsSuccessful = (state, action) => {
@@ -124,6 +131,11 @@ const extraReducersBuilder = (builder) => {
     builder.addCase(
         addUserCampaign.fulfilled,
         addUserCampaignSuccessful
+    );
+
+    builder.addCase(
+        deleteUserCampaign.fulfilled,
+        deleteUserCampaignSuccessful
     );
 
     builder.addCase(

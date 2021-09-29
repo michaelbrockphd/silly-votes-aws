@@ -46,23 +46,25 @@ const reduceRemoveCampaignFail = (state, error) => {
 
     alert( "Remove failed." );
     
-    const rtn = { ...state, isBusy: false }
+    const rtn = { ...state }
 
     return rtn;
-};
-
-const reduceRemoveCampaignSuccess = (state, target) => {
-    const modifiedCampaigns = state.campaigns.filter( c => c.id !== target.value.id );
-
-    const rtn = {...state, campaigns: modifiedCampaigns};
-
-    return( rtn );
 };
 
 const reduceSaveCampaignFail = (state, error) => {
     console.log(error);
 
     alert( "Save failed." );
+    
+    const rtn = { ...state }
+
+    return rtn;
+};
+
+const reduceUpdateCampaignFail = (state, error) => {
+    console.log(error);
+
+    alert( "Update failed." );
     
     const rtn = { ...state }
 
@@ -90,7 +92,7 @@ const reducer = (state, action) => {
             return reduceSaveCampaignFail(state, action);
 
         case Actions.UPDATE_CAMPAIGN_FAIL:
-            return { ...state };
+            return reduceUpdateCampaignFail(state, action);
 
         default:
             throw new Error( `${action.type} is not a recognised action.` );

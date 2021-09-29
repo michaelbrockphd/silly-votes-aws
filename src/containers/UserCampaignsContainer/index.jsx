@@ -6,6 +6,7 @@ import {
     useDispatch,
     useSelector } from 'react-redux'
 
+
 import ContainerActions from './Actions.mjs';
 import containerReducer from './Reducers.mjs';
 import CampaignTable, {
@@ -17,8 +18,10 @@ import {
     getIdGenerator } from '../../data';
 import {
     addUserCampaign,
+    deleteUserCampaign,
     loadAllUserCampaigns,
     updateUserCampaign } from '../../web-api-thrunks';
+
 
 const idGenerator = getIdGenerator();
 
@@ -73,23 +76,18 @@ const UserCampaignsContainer = (props) => {
     };
 
     const deleteCampaign = (campaign) => {
-        /*dispatch({ type: Actions.REMOVE_CAMPAIGN_INIT });
-
         const token = currentUserToken();
 
-        WebApi.deleteUserCampaign( token, campaign )
-              .then((response) => {
-                  dispatch({
-                      type: Actions.REMOVE_CAMPAIGN_SUCCESS,
-                      value: campaign
-                  });
-              })
-              .catch((err) => {
-                  dispatch({
-                      type: Actions.REMOVE_CAMPAIGN_FAIL,
-                      value: err
-                  });
-              });*/
+        storeDispatch(deleteUserCampaign( { token, campaign } ))
+            .then( () => {
+                containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
+            } )
+            .catch( (err) => {
+                containerDispatch({
+                    type: ContainerActions.REMOVE_CAMPAIGN_FAIL,
+                    value: err
+                });
+            } );
     };
 
     const editCampaign = (campaign) => {
