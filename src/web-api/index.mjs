@@ -21,15 +21,6 @@ const setApiUrl = (url) => {
 
 // API Methods ////////////////////////////////////////////////////////////////
 
-const getCampaigns = () => {
-    const reqParameters = {
-        method: 'get',
-        url: `${baseUrl}/${PATH_CAMPAIGNS}`
-    };
-
-    return( axios( reqParameters ) );
-}
-
 const addUserCampaign = (authToken, freshCampaign) => {
     const reqHeaders = {
         Authorization: authToken
@@ -54,6 +45,15 @@ const deleteUserCampaign = (authToken, campaign) => {
         method: 'delete',
         url: `${baseUrl}/${PATH_CAMPAIGNS_USER}/${campaign.id}`,
         headers: reqHeaders
+    };
+
+    return( axios( reqParameters ) );
+}
+
+const getCampaigns = () => {
+    const reqParameters = {
+        method: 'get',
+        url: `${baseUrl}/${PATH_CAMPAIGNS}`
     };
 
     return( axios( reqParameters ) );
@@ -97,9 +97,9 @@ export {
 };
 
 export default {
-    getCampaigns,
     addUserCampaign,
     deleteUserCampaign,
+    getCampaigns,
     getUserCampaigns,
     updateUserCampaign
 };

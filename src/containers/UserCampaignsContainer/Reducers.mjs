@@ -1,13 +1,24 @@
 import Actions from './Actions.mjs';
 
-// Individual reducers for more complex actions.
+
+// Individual reducers ////////////////////////////////////////////////////////
 
 const reduceAddCampaign = (state, target) => {
-    var rtn = {
+    const rtn = {
         ...state,
         isEditingDetails: false,
-        campaignDetails: target.value,
+        selectedCampaignDetails: target.value,
         showCampaignDetails: true
+    };
+
+    return( rtn );
+};
+
+const reduceCloseDetails = (state, target) => {
+    const rtn = {
+        ...state,
+        selectedCampaignDetails: null,
+        showCampaignDetails: false
     };
 
     return( rtn );
@@ -18,12 +29,12 @@ const reduceEditCampaign = (state, target) => {
     //
     // https://stackoverflow.com/questions/122102/what-is-the-most-efficient-way-to-deep-clone-an-object-in-javascript/122704#122704
 
-    var clone = { ...target.value };
+    const clone = { ...target.value };
 
-    var rtn = {
+    const rtn = {
         ...state,
         isEditingDetails: true,
-        campaignDetails: clone,
+        selectedCampaignDetails: clone,
         showCampaignDetails: true
     };
 
@@ -35,7 +46,7 @@ const reduceRemoveCampaignFail = (state, error) => {
 
     alert( "Remove failed." );
     
-    var rtn = { ...state, isBusy: false }
+    const rtn = { ...state, isBusy: false }
 
     return rtn;
 };
@@ -53,7 +64,7 @@ const reduceSaveCampaignFail = (state, error) => {
 
     alert( "Save failed." );
     
-    var rtn = { ...state, isBusy: false }
+    const rtn = { ...state, isBusy: false }
 
     return rtn;
 };
@@ -61,9 +72,9 @@ const reduceSaveCampaignFail = (state, error) => {
 const reduceSaveCampaignSuccess = (state, target) => {
     const campaign = target.value;
 
-    var updatedCampaigns = [ ...state.campaigns, campaign ];
+    const updatedCampaigns = [ ...state.campaigns, campaign ];
 
-    var rtn = {
+    const rtn = {
         ...state,
         campaigns: updatedCampaigns,
         showCampaignDetails: false,
@@ -76,14 +87,14 @@ const reduceSaveCampaignSuccess = (state, target) => {
 const reduceUpdateCampaignSuccess = (state, target) => {
     const campaign = target.value;
 
-    var original = state.campaigns
+    let original = state.campaigns
                         .filter( c => c.id === campaign.id )[ 0 ];
 
     original.description = campaign.description;
     original.poolSize = campaign.poolSize;
     original.choices = campaign.choices;
 
-    var rtn = {
+    const rtn = {
         ...state,
         showCampaignDetails: false,
         isBusy: false
@@ -92,7 +103,8 @@ const reduceUpdateCampaignSuccess = (state, target) => {
     return(rtn);
 };
 
-// The main reducer.
+
+// Main Reducer ///////////////////////////////////////////////////////////////
 
 const reducer = (state, action) => {
     switch(action.type) {
@@ -103,13 +115,10 @@ const reducer = (state, action) => {
             return { ...state, campaigns: action.value };
 
         case Actions.CLOSE_DETAILS:
-            return { ...state, showCampaignDetails: false };
+            return reduceCloseDetails(state, action);
 
         case Actions.EDIT_CAMPAIGN:
             return reduceEditCampaign(state, action);
-
-        case Actions.INIT_FINISHED:
-            return { ...state, isLoading: false, campaigns: action.value };
 
         case Actions.REMOVE_CAMPAIGN_FAIL:
             return reduceRemoveCampaignFail(state, action);
@@ -142,5 +151,8 @@ const reducer = (state, action) => {
             throw new Error( `${action.type} is not a recognised action.` );
     }
 };
+
+
+// Exportation ////////////////////////////////////////////////////////////////
 
 export default reducer;

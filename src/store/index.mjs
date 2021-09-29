@@ -11,7 +11,6 @@ const {
     createStore } = redux;
 
 
-
 // Middleware /////////////////////////////////////////////////////////////////
 
 // Taken from: https://redux.js.org/tutorials/fundamentals/part-6-async-logic#using-the-redux-thunk-middleware
@@ -35,7 +34,6 @@ const rootReducer = combineReducers( {
 } );
 
 const store = createStore( rootReducer, middlewareEnhancer );
-
 
 
 // Exportation ////////////////////////////////////////////////////////////////

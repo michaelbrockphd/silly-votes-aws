@@ -2,48 +2,55 @@ import {
     Fragment,
     useEffect,
     useReducer } from 'react';
-import { useAuthorization } from '../../contexts/AuthorizationContext';
-import CampaignTable, { CampaignTableLoading } from '../../components/CampaignTable';
+import {
+    useDispatch,
+    useSelector } from 'react-redux'
+
+import ContainerActions from './Actions.mjs';
+import containerReducer from './Reducers.mjs';
+import CampaignTable, {
+    CampaignTableLoading } from '../../components/CampaignTable';
 import CampaignDetailsDialog from '../../components/CampaignDetailsDialog';
-
-import Actions from './Actions.mjs';
+import {
+    useAuthorization } from '../../contexts/AuthorizationContext';
 import { getIdGenerator } from '../../data';
-import reducer from './Reducers.mjs';
-import WebApi from '../../web-api';
-
-const initialState = {
-    isLoading: true,
-    campaigns: [],
-    showCampaignDetails: false,
-    isEditingDetails: false,
-    campaignDetails: null
-};
+import {
+    campaignAdded } from '../../slices/campaignsSlice'
+import {
+    loadAllUserCampaigns } from '../../web-api-thrunks';
 
 const idGenerator = getIdGenerator();
 
+const initialState = {
+    isEditingDetails: false,
+    selectedCampaignDetails: null,
+    showCampaignDetails: false
+};
+
+const campaignsStoreSelector = (state) => {
+    return( state.campaigns );
+};
+
 const UserCampaignsContainer = (props) => {
     const [{
-        isLoading,
-        campaigns,
-        showCampaignDetails,
         isEditingDetails,
-        campaignDetails }, dispatch] = useReducer(reducer, initialState);
+        selectedCampaignDetails,
+        showCampaignDetails }, containerDispatch] = useReducer(containerReducer, initialState);
 
     const { currentUserToken } = useAuthorization();
+
+    const campaignsStore = useSelector(campaignsStoreSelector);
+
+    const {
+        campaigns,
+        isLoading } = campaignsStore;
+
+    const storeDispatch = useDispatch();
 
     useEffect(() => {
         const token = currentUserToken();
 
-        WebApi.getUserCampaigns( token )
-              .then((response) => {
-                    dispatch({
-                        type: Actions.INIT_FINISHED,
-                        value: response.data
-                    });
-              })
-              .catch((err) => {
-                  console.log(err);
-              });
+        storeDispatch(loadAllUserCampaigns(token));
     }, []);
 
     const addCampaign = () => {
@@ -54,21 +61,21 @@ const UserCampaignsContainer = (props) => {
             choices: ['','']
         };
 
-        dispatch({
-            type: Actions.ADD_CAMPAIGN,
+        containerDispatch({
+            type: ContainerActions.ADD_CAMPAIGN,
             value: fresh
         });
     };
 
     const editCampaign = (campaign) => {
-        dispatch({
-            type: Actions.EDIT_CAMPAIGN,
+        containerDispatch({
+            type: ContainerActions.EDIT_CAMPAIGN,
             value: campaign
         });
     };
 
     const deleteCampaign = (campaign) => {
-        dispatch({ type: Actions.REMOVE_CAMPAIGN_INIT });
+        /*dispatch({ type: Actions.REMOVE_CAMPAIGN_INIT });
 
         const token = currentUserToken();
 
@@ -84,15 +91,15 @@ const UserCampaignsContainer = (props) => {
                       type: Actions.REMOVE_CAMPAIGN_FAIL,
                       value: err
                   });
-              });
+              });*/
     };
 
     const closeDetails = () => {
-        dispatch({ type: Actions.CLOSE_DETAILS });
+        containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
     };
 
     const saveDetails = (data) => {
-        dispatch({ type: Actions.SAVE_CAMPAIGN_INIT });
+        /*dispatch({ type: Actions.SAVE_CAMPAIGN_INIT });
 
         const token = currentUserToken();
 
@@ -112,11 +119,11 @@ const UserCampaignsContainer = (props) => {
                       type: Actions.SAVE_CAMPAIGN_FAIL,
                       value: err
                   });
-              });
+              });*/
     };
 
     const updateDetails = (data) => {
-        dispatch({ type: Actions.UPDATE_CAMPAIGN_INIT });
+        /*dispatch({ type: Actions.UPDATE_CAMPAIGN_INIT });
 
         const token = currentUserToken();
 
@@ -133,7 +140,7 @@ const UserCampaignsContainer = (props) => {
                   console.log(err);
 
                   dispatch({ type: Actions.UPDATE_CAMPAIGN_FAIL });
-              });
+              });*/
     };
 
     return(
@@ -150,7 +157,7 @@ const UserCampaignsContainer = (props) => {
                     deleteCampaign={deleteCampaign} />}
 
             <CampaignDetailsDialog
-                data={campaignDetails}
+                data={selectedCampaignDetails}
                 isOpen={showCampaignDetails}
                 isEditing={isEditingDetails}
                 onClose={closeDetails}

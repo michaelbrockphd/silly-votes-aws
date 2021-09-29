@@ -6,7 +6,6 @@ import {
 
 import CampaignTable, {
     CampaignTableLoading } from '../../components/CampaignTable';
-
 import {
     loadAllCampaigns } from '../../web-api-thrunks';
 
@@ -21,18 +20,18 @@ const CampaignContainer = () => {
 
     const {
         campaigns,
-        loading } = campaignsStore;
+        isLoading } = campaignsStore;
 
     useEffect( () => {
         dispatch(loadAllCampaigns());
-    }, [loading] );
+    }, [] );
         
     return(
         <Fragment>
-            {loading && 
+            {isLoading && 
                 <CampaignTableLoading />}
 
-            {!loading &&
+            {!isLoading &&
                 <CampaignTable campaigns={campaigns} />}
         </Fragment>
     );

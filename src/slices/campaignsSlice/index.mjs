@@ -10,17 +10,13 @@ const {
     createSlice } = redux_toolkit;
 
 
-
 // Initial State //////////////////////////////////////////////////////////////
 
 const campaignsInitialState = {
     campaigns: [],
 
-    isLoading: true,
-
-    selectedCampaign: null
+    isLoading: true
 };
-
 
 
 // Reducer Functions //////////////////////////////////////////////////////////
@@ -32,26 +28,7 @@ const reduceAddCampaign = (state, target) => {
 
     var rtn = {
         ...state,
-        campaigns: updatedCampaigns,
-        selectedCampaign: null
-    };
-
-    return( rtn );
-};
-
-const reduceCreateCampaign = (state, target) => {
-    var rtn = {
-        ...state,
-        selectedCampaign: target.payload
-    };
-
-    return( rtn );
-};
-
-const reduceDeselectCampaign = (state, target) => {
-    const rtn = {
-        ...state,
-        selectedCampaign: null
+        campaigns: updatedCampaigns
     };
 
     return( rtn );
@@ -65,17 +42,6 @@ const reduceRemoveCampaign = (state, target) => {
     const rtn = {
         ...state,
         campaigns: filterCampaigns
-    };
-
-    return( rtn );
-};
-
-const reduceSelectCampaign = (state, target) => {
-    const campaign = target.payload;
-
-    const rtn = {
-        ...state,
-        selectedCampaign: campaign
     };
 
     return( rtn );
@@ -109,13 +75,11 @@ const reduceUpdateCampaign = (state, target) => {
 
     const rtn = {
         ...state,
-        campaigns: updatedCampaigns,
-        selectedCampaign: null
+        campaigns: updatedCampaigns
     };
 
     return( rtn );
 };
-
 
 
 // Thunk Callbacks ////////////////////////////////////////////////////////////
@@ -126,6 +90,11 @@ const loadAllCampaignsSuccessful = (state, action) => {
     state.isLoading = false;
 };
 
+const loadAllUserCampaignsSuccessful = (state, action) => {
+    state.campaigns = action.payload;
+
+    state.isLoading = false;
+};
 
 
 // Slice Creation /////////////////////////////////////////////////////////////
@@ -134,6 +103,11 @@ const extraReducersBuilder = (builder) => {
     builder.addCase(
         loadAllCampaigns.fulfilled,
         loadAllCampaignsSuccessful
+    );
+
+    builder.addCase(
+        loadAllUserCampaigns.fulfilled,
+        loadAllUserCampaignsSuccessful
     );
 };
 
@@ -144,10 +118,7 @@ const campaignsSlice = createSlice( {
 
     reducers: {
         campaignAdded: reduceAddCampaign,
-        campaignCreated: reduceCreateCampaign,
-        campaignDeselected: reduceDeselectCampaign,
         campaignRemoved: reduceRemoveCampaign,
-        campaignSelected: reduceSelectCampaign,
         campaignUpdated: reduceUpdateCampaign
     },
 
@@ -155,15 +126,11 @@ const campaignsSlice = createSlice( {
 } );
 
 
-
 // Exportation ////////////////////////////////////////////////////////////////
 
 export const {
     campaignAdded,
-    campaignCreated,
-    campaignDeselected,
     campaignRemoved,
-    campaignSelected,
     campaignUpdated } = campaignsSlice.actions;
 
 export default campaignsSlice.reducer;
