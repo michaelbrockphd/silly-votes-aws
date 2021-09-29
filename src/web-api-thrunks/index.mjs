@@ -12,9 +12,10 @@ const {
 
 const STORE_NAME = "campaigns";
 
-const NAME_ADD_USER_CAMPAIGNS = "addUserCampaign"
-const NAME_LOAD_ALL_CAMPAIGNS = "loadAllCampaigns"
-const NAME_LOAD_ALL_USER_CAMPAIGNS = "loadAllUserCampaigns"
+const NAME_ADD_USER_CAMPAIGNS = "addUserCampaign";
+const NAME_LOAD_ALL_CAMPAIGNS = "loadAllCampaigns";
+const NAME_LOAD_ALL_USER_CAMPAIGNS = "loadAllUserCampaigns";
+const NAME_UPDATE_USER_CAMPAIGN = "updateUserCampaign";
 
 
 // Thunk Implementations //////////////////////////////////////////////////////
@@ -50,11 +51,27 @@ const loadAllUserCampaigns = createAsyncThunk(
     }
 );
 
+const updateUserCampaign = createAsyncThunk(
+    `${STORE_NAME}/${NAME_UPDATE_USER_CAMPAIGN}`,
+    async (payload) => {
+        const {
+            token,
+            campaign } = payload;
+
+        await webApi.updateUserCampaign(token, campaign);
+
+        // To save headaches, just return the provided campaign.
+
+        return campaign;
+    }
+);
+
 
 // Exportation ////////////////////////////////////////////////////////////////
 
 export {
     addUserCampaign,
     loadAllCampaigns,
-    loadAllUserCampaigns
+    loadAllUserCampaigns,
+    updateUserCampaign
 };

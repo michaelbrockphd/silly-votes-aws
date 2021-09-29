@@ -3,7 +3,8 @@ import redux_toolkit from '@reduxjs/toolkit';
 import {
     addUserCampaign,
     loadAllCampaigns,
-    loadAllUserCampaigns } from '../../web-api-thrunks';
+    loadAllUserCampaigns,
+    updateUserCampaign } from '../../web-api-thrunks';
 
 // CommonJS Workaround
 
@@ -105,6 +106,17 @@ const loadAllUserCampaignsSuccessful = (state, action) => {
     state.isLoading = false;
 };
 
+const updateUserCampaignSuccessful = (state, action) => {
+    const campaign = action.payload;
+
+    let original = state.campaigns
+                        .filter( c => c.id === campaign.id )[ 0 ];
+
+    original.description = campaign.description;
+    original.poolSize = campaign.poolSize;
+    original.choices = campaign.choices;
+};
+
 
 // Slice Creation /////////////////////////////////////////////////////////////
 
@@ -122,6 +134,11 @@ const extraReducersBuilder = (builder) => {
     builder.addCase(
         loadAllUserCampaigns.fulfilled,
         loadAllUserCampaignsSuccessful
+    );
+
+    builder.addCase(
+        updateUserCampaign.fulfilled,
+        updateUserCampaignSuccessful
     );
 };
 

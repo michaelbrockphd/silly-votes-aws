@@ -13,12 +13,12 @@ import CampaignTable, {
 import CampaignDetailsDialog from '../../components/CampaignDetailsDialog';
 import {
     useAuthorization } from '../../contexts/AuthorizationContext';
-import { getIdGenerator } from '../../data';
 import {
-    campaignAdded } from '../../slices/campaignsSlice'
+    getIdGenerator } from '../../data';
 import {
     addUserCampaign,
-    loadAllUserCampaigns } from '../../web-api-thrunks';
+    loadAllUserCampaigns,
+    updateUserCampaign } from '../../web-api-thrunks';
 
 const idGenerator = getIdGenerator();
 
@@ -102,8 +102,6 @@ const UserCampaignsContainer = (props) => {
     const addDetails = (campaign) => {
         const token = currentUserToken();
 
-        //data.id = response.data.newId;
-
         storeDispatch(addUserCampaign( { token, campaign } ))
             .then( () => {
                 containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
@@ -116,25 +114,19 @@ const UserCampaignsContainer = (props) => {
             } );
     };
 
-    const updateDetails = (data) => {
-        /*dispatch({ type: Actions.UPDATE_CAMPAIGN_INIT });
-
+    const updateDetails = (campaign) => {
         const token = currentUserToken();
 
-        WebApi.updateUserCampaign( token, data )
-              .then((response) => {
-                  dispatch({
-                      type: Actions.UPDATE_CAMPAIGN_SUCCESS,
-                      value: data
-                  });
-              })
-              .catch((err) => {
-                  alert( "Update failed." );
-
-                  console.log(err);
-
-                  dispatch({ type: Actions.UPDATE_CAMPAIGN_FAIL });
-              });*/
+        storeDispatch(updateUserCampaign({token, campaign}))
+            .then( () => {
+                containerDispatch({ type: ContainerActions.CLOSE_DETAILS });
+            } )
+            .catch( (err) => {
+                containerDispatch({
+                    type: ContainerActions.UPDATE_CAMPAIGN_FAIL,
+                    value: err
+                });
+            } );
     };
 
     return(

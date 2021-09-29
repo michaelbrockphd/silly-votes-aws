@@ -69,25 +69,6 @@ const reduceSaveCampaignFail = (state, error) => {
     return rtn;
 };
 
-const reduceUpdateCampaignSuccess = (state, target) => {
-    const campaign = target.value;
-
-    let original = state.campaigns
-                        .filter( c => c.id === campaign.id )[ 0 ];
-
-    original.description = campaign.description;
-    original.poolSize = campaign.poolSize;
-    original.choices = campaign.choices;
-
-    const rtn = {
-        ...state,
-        showCampaignDetails: false,
-        isBusy: false
-    };
-
-    return(rtn);
-};
-
 
 // Main Reducer ///////////////////////////////////////////////////////////////
 
